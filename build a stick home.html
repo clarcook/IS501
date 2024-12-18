@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <title>Build A Stick House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .house {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: end;
+      margin: 45px 0;
+      width: 200px;
+      height: 200px;
+      position: relative;
+      border: 1px dashed #ccc;
+    }
+    .stick {
+      width: 10px;
+      height: 50px;
+      background-color: #5e7f72;
+      margin: 1px;
+    }
+    .roof {
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 50px solid #413d20;
+      position: absolute;
+      top: -50px;
+      left: 0;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Build A Stick House</h1>
+    <div class="house" id="house">
+      <!-- House elements go here -->
+    </div>
+    <button onclick="addStick()">Add Stick</button>
+    <button onclick="blowDown()">Blow Down</button>
+    <button onclick="clearHouse()">Clear House</button>
+  </div>
+
+  <script>
+    const house = document.getElementById('house');
+    const maxSticks = 64;
+
+    function addStick() {
+      const currentSticks = Array.from(house.children).filter(child => child.classList.contains('stick')).length;
+      if (currentSticks < maxSticks) {
+        if (currentSticks === 0 && house.querySelector('.roof') === null) {
+          const roof = document.createElement('div');
+          roof.className = 'roof';
+          house.appendChild(roof);
+        }
+        const stick = document.createElement('div');
+        stick.className = 'stick';
+        house.appendChild(stick);
+      } else {
+            alert('Maximum number of sticks reached!');
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    }
+
+    function blowDown() {
+      const sticks = Array.from(house.children).filter(child => child.classList.contains('stick'));
+      sticks.forEach(stick => {
+        stick.style.transform = `rotate(${Math.random() * 360}deg) translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`;
+        stick.style.transition = 'transform 1s';
+      });
+    }
+
+    function clearHouse() {
+      house.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
